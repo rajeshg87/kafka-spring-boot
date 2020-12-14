@@ -1,0 +1,57 @@
+server:
+  port: 8081
+
+spring:
+  profiles:
+    active: nonprod
+
+---
+
+spring:
+  profiles: local
+  kafka:
+    consumer:
+      bootstrap-servers:
+        - localhost:9092
+        - localhost:9093
+        - localhost:9094
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: library-events-listener-group
+  datasource:
+    url: jdbc:mysql://localhost:3306/library_events
+    username: rajesh
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+---
+
+spring:
+  profiles: nonprod
+  kafka:
+    consumer:
+      bootstrap-servers:
+        - localhost:9095
+        - localhost:9096
+        - localhost:9097
+      key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: library-events-listener-group
+      ssl:
+        trust-store-location: file://Users/rajeshg87/code/kafka-spring-boot/ssl/client.truststore.jks
+        trust-store-password: password
+        key-store-location: file://Users/rajeshg87/code/kafka-spring-boot/ssl/client.keystore.jks
+        key-store-password: password
+      properties:
+        security:
+          protocol: SSL
+          ssl.endpoint.identification.algorithm:
+  datasource:
+    url: jdbc:mysql://localhost:3306/library_events
+    username: rajesh
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
